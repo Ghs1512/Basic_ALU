@@ -26,7 +26,7 @@ module alu_system (
         .clk(clk), .reset(reset), .out(mod5_out)
     );
 
-    // ALU performing 4A ± 2B
+    // ALU performing 4A Â± 2B
     ALU_4A_2B u_alu (
         .A(A), .B(B), .sel(alu_sel), .P(alu_out)
     );
@@ -44,7 +44,6 @@ module alu_system (
 
 endmodule
 
-// --------------------------------------------------------
 
 module pipo_4bit (
     input clk,
@@ -61,8 +60,6 @@ module pipo_4bit (
     end
 endmodule
 
-// --------------------------------------------------------
-
 module mod5counter (
     input clk,
     input reset,
@@ -78,24 +75,20 @@ module mod5counter (
     end
 endmodule
 
-// --------------------------------------------------------
-
 module ALU_4A_2B (
     input [1:0] A,
     input [1:0] B,
     input sel,            // 0 = add, 1 = subtract
-    output [4:0] P        // Output 4A ± 2B
+    output [4:0] P        // Output 4A Â± 2B
 );
-    wire [3:0] A_shifted = {A, 2'b00};     // 4 × A
-    wire [3:0] B_shifted = {B, 1'b0};      // 2 × B
+    wire [3:0] A_shifted = {A, 2'b00};     // 4 Ã— A
+    wire [3:0] B_shifted = {B, 1'b0};      // 2 Ã— B
     wire [4:0] B_ext = {1'b0, B_shifted};  // 5-bit extension
     wire [4:0] B_twos = ~B_ext + 1'b1;     // Two's complement
     wire [4:0] operand = sel ? B_twos : B_ext;
 
     assign P = {1'b0, A_shifted} + operand;
 endmodule
-
-// --------------------------------------------------------
 
 module bcd_2_ssd (
     input [3:0] BCD,
@@ -110,9 +103,6 @@ module bcd_2_ssd (
     assign SSD[6] = BCD[3] | (~BCD[2] & ~BCD[1]) | (BCD[0] & BCD[2]) | (BCD[1] & ~BCD[0]);
 endmodule
 
-// --------------------------------------------------------
-
-// =================== MODIFIED TESTBENCH ===================
 module tb_alu_system;
 
     reg clk;
@@ -147,29 +137,29 @@ module tb_alu_system;
         // Global reset
         reset = 1; #10; reset = 0;
 
-        // ---------- PIPO Test ----------
+        // PIPO Test
         sel = 2'b00; load = 1; data_in = 4'b1010; #10;
         load = 0; #10;
         // Reset outputs
         sel = 2'b00; data_in = 4'b0000; load = 0; #10;
 
-        // ---------- ALU ADD Test ----------
+        //ALU ADD Test 
         sel = 2'b01; A = 2'b10; B = 2'b01; alu_sel = 0; #10;
         // Reset outputs
         A = 2'b00; B = 2'b00; alu_sel = 0; #10;
 
-        // ---------- ALU SUB Test ----------
+        //ALU SUB Test 
         sel = 2'b01; A = 2'b11; B = 2'b01; alu_sel = 1; #10;
         // Reset outputs
         A = 2'b00; B = 2'b00; alu_sel = 0; #10;
 
-        // ---------- Mod-5 Counter Test ----------
+        //Mod-5 Counter Test 
         sel = 2'b10;
         #50;  // Allow several clock cycles
         // Reset outputs
         sel = 2'b00; #10;
 
-        // ---------- SSD Display Test ----------
+        //SSD Display Test 
         sel = 2'b11; data_in = 4'b0111; #10;
         // Reset outputs
         data_in = 4'b0000; #10;
