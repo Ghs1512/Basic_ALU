@@ -1,1 +1,2 @@
 # Basic_ALU
+Designed an ALU capable of performing operations like 2-bit addition and subtraction using full adders and full subtractors using only NAND gates and pseudo-NMOS only respectively. Also designed another ALU capable of performing a binary logic function, 4-bit PIPO, MOD 5 counter and BCD to seven segment display. The above was implemented in ModelSim, Xillix Vivado and Cadence Virtuoso.
